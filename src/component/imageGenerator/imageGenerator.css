@@ -40,9 +40,6 @@
 .loader img{
     width: 200px;
 }
-.loader{
-    display: none;
-}
 
 .image-container .image {
 
@@ -53,6 +50,7 @@
 
 
 .image-container img {
+    cursor: pointer;
     max-width: calc(50% - 10px);
     height: auto;
     gap: 15px;
@@ -154,7 +152,8 @@ ul li{
     list-style: none;
 }
 .input-box {
-    width: 80%;
+    padding: 0 5px 0 20px;
+    width: 96%;
     height: 50px;
     border-radius: 25px;
     border: 2px solid rgba(0, 0, 0, 0.117);
@@ -170,7 +169,7 @@ ul li{
     justify-content: center;
 }
 #images{
-    display: none;
+    /* display: none; */
     padding: unset;
 }
 .first-display{
@@ -184,7 +183,7 @@ ul li{
     user-select: none;
 }
 .input-box input {
-    width: 60%;
+    width: 80%;
     height: 60%;
     font-size: 1.2em;
     border: none;
@@ -195,18 +194,67 @@ ul li{
 
 .input-box button {
     transition: margin-left 0.5s ease, font-size 0.5s ease;
-    width: 30%;
+    width: 20%;
     height: 80%;
     border-radius: 18px;
     font-size: 1.3em;
     border: none;
-    margin-right: -18px;
+    /* margin-right: -18px; */
     cursor: pointer;
     color: rgba(0, 0, 0, 0.437);
+}
+.light-box{
+    z-index: 1000;
+    position: fixed;
+    overflow: auto;
+    top: 0;
+    left: 0;
+    background: #000000bd;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    transition: opacity 0.5s ease, z-index 0.5s ease;
+    opacity: 0;
+    z-index: -1;
+}
+.light-box img{
+    border-radius: 10px;
+    max-width: 100%;
+}
+.light-box .uil-times{
+    z-index: 1000;
+    font-size: 3em;
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    color: white;
+}
+.light-box .uil-import{
+    z-index: 1000;
+    cursor: pointer;
+    color: white;
+    font-size: 3em; 
+    position: fixed;
+    top: 15px;
+    left: 15px;
+}
+.light-box-container{
+    overflow: auto;
+    border: 1px solid red;
+    height: 95vh;
+    padding: 5px;
+    width: 100vw;
+    text-align: center;
+    transition: scale 0.5s ease;
+    scale: 1;
 }
 @media screen and (max-width: 900px) {
     .input-box button{
         font-size: 1em!important;
-        margin-left: -40px;
+        /* margin-left: -40px; */
     }
 }

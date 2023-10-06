@@ -5,44 +5,35 @@ import "./imageGenerator.css";
 
 export default function ImageGenerator() {
     const [inputValue, setInputValue] = useState('');
-    const [image_url, setImage_url] = useState(default_img);
+    const [images, setImages] = useState([]);
     const [buttonStyle, setButtonStyle] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [firstDisplay, setFirstDisplay] = useState(true)
+    const [currentImageUrl, setCurrentImageUrl] = useState('');
     let inputRef = useRef(null)
 
+
     const imageGeneration = () => {
-        let Data = null;
+        setFirstDisplay(false)
+        setLoading(true)
         if (inputRef.current.value.trim === "") {
             return 0;
         }
         setInputValue(inputRef.current.value.trim())
         const apiUrl = "https://lexica.art/api/v1/search?q=" + inputRef.current.value.trim();
-        document.querySelector(".loader").style.display = "unset";
         fetch(apiUrl)
-        .then(response => {
+            .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                document.querySelector(".loader").style.display = "none";
-                document.getElementById("images").innerHTML = "";
-                document.getElementById("images").style.display = "unset"
-                document.querySelector(".first-container").style.display = "none"
-                let i = 0;
-                data.images.forEach(element => {
-                    if (i < 25) {
-                        document.getElementById("images").innerHTML += `
-                    <li className="card">
-                        <img src=${element.src} alt="image" />
-                    </li>
-                    `
-                    }
-                    i++;
-                });
+                setImages(data.images.slice(0, 25));
+                setLoading(false)
             })
             .catch(error => {
-                console.error("Fetch error:", error);
+                alert("Fetch error:" + error);
             });
     }
 
@@ -60,34 +51,65 @@ export default function ImageGenerator() {
             setButtonStyle({});
         }
     };
-
+    const handleLightBox = () => {
+        document.querySelector(".light-box-container").style.scale = "0";
+        document.querySelector(".light-box").style.zIndex = "-1";
+        document.querySelector(".light-box").style.opacity = "0";
+        document.body.style.overflow = "auto";
+    }
+    const showSingleImage = (src) => {
+        document.querySelector(".light-box-container").style.scale = "1";
+        document.querySelector(".light-box").style.zIndex = "1000";
+        document.querySelector(".light-box").style.opacity = "1";
+        document.body.style.overflow = "hidden";
+        setCurrentImageUrl(src)
+    }
+    const handleDownload = () => {
+        let imgUrl = currentImageUrl;
+        fetch(imgUrl).then(res => res.blob()).then(file => {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(file);
+            a.download = new Date().getTime();
+            a.click();
+        }).catch(() => alert("Failed to download image!"));
+    }
     return (
         <div className='container'>
+            <div className="light-box">
+                <i className="uil uil-times" onClick={handleLightBox}></i>
+                <i className="uil uil-import" onClick={handleDownload}></i>
+                <div className="light-box-container">
+                    <img src={currentImageUrl} alt="image" />
+                </div>
+            </div>
             <div className="header">AI Image <span>Generator</span></div>
 
             <section className="gallery image-container">
-                <div className="first-container">
-                    <div className="first-display">
-                        Search Image
-                    </div>
-                </div>
-                <ul className="images" id='images'>
-                    <li className="card">
-                        <img src={default_img} alt="" />
-                        <div className="details">
-                            <div className="photograph">
-                                <i className="uil uil-camera"></i>
-                            </div>
-                            <button type="button" className="import-btn">
-                                <i className="uil uil-import"></i>
-                            </button>
+                {firstDisplay ? (
+                    <div className="first-container">
+                        <div className="first-display">
+                            Search Image
                         </div>
-                    </li>
-                </ul>
+                    </div>) : (
+                    loading ? (
+                        <div className="loader">
+                            <img src={loader} alt="" />
+                        </div>
+                    ) : (
+                        <ul className="images" id='images'>
+                            {images.map((element, i) => (
+                                <li className="card" key={i}>
+                                    <img loading='lazy'
+                                        src={element.src}
+                                        onClick={() => showSingleImage(element.src)}
+                                        alt="image"
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                    ))}
             </section>
-            <div className="loader">
-                <img src={loader} alt="" />
-            </div>
+
             <div className="input-box">
                 <input
                     ref={inputRef}
