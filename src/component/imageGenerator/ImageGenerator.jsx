@@ -79,7 +79,9 @@ export default function ImageGenerator() {
                 <i className="uil uil-times" onClick={handleLightBox}></i>
                 <i className="uil uil-import" onClick={handleDownload}></i>
                 <div className="light-box-container">
-                    <img src={currentImageUrl} alt="image" />
+                    <div className="container-inner">
+                        <img src={currentImageUrl} alt="image" />
+                    </div>
                 </div>
             </div>
             <div className="header">AI Image <span>Generator</span></div>

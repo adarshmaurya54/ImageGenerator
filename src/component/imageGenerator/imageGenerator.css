@@ -243,7 +243,9 @@ ul li{
     left: 15px;
 }
 .light-box-container{
-    overflow: auto;
+     display: flex;
+    align-items: flex-end;
+    justify-content: center;
     height: 95vh;
     padding: 5px;
     width: 100vw;
@@ -251,9 +253,20 @@ ul li{
     transition: scale 0.5s ease;
     scale: 1;
 }
+.container-inner{
+    height: 90%;
+    width: 100%;
+    overflow: auto;
+}
+.container-inner::-webkit-scrollbar{
+    display: none;
+}
 @media screen and (max-width: 900px) {
     .input-box button{
         font-size: 1em!important;
         /* margin-left: -40px; */
+    }
+    .container-inner{
+        height: 80%;
     }
 }
