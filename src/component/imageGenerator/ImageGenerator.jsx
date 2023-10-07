@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import default_img from "../assets/default_image.svg";
 import loader from "../assets/loader.gif";
 import "./imageGenerator.css";
 
@@ -29,7 +28,7 @@ export default function ImageGenerator() {
                 return response.json();
             })
             .then(data => {
-                setImages(data.images.slice(0, 25));
+                setImages(data.images);
                 setLoading(false)
             })
             .catch(error => {
@@ -46,6 +45,7 @@ export default function ImageGenerator() {
             setButtonStyle({
                 background: "linear-gradient(30deg, rgba(255, 166, 0, 1) 0%, rgba(255, 0, 168, 1) 100%)",
                 color: "white",
+                cursor: "pointer",
             });
         } else {
             setButtonStyle({});
@@ -80,7 +80,7 @@ export default function ImageGenerator() {
                 <i className="uil uil-import" onClick={handleDownload}></i>
                 <div className="light-box-container">
                     <div className="container-inner">
-                        <img src={currentImageUrl} alt="image" />
+                        <img src={currentImageUrl} alt="currentImage" />
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@ export default function ImageGenerator() {
                     </div>) : (
                     loading ? (
                         <div className="loader">
-                            <img src={loader} alt="" />
+                            <img src={loader} alt="loader" />
                         </div>
                     ) : (
                         <ul className="images" id='images'>
@@ -104,7 +104,7 @@ export default function ImageGenerator() {
                                     <img loading='lazy'
                                         src={element.src}
                                         onClick={() => showSingleImage(element.src)}
-                                        alt="image"
+                                        alt={element.prompt}
                                     />
                                 </li>
                             ))}
@@ -121,8 +121,8 @@ export default function ImageGenerator() {
                     value={inputValue}
                     onChange={handleInputChange}
                 />
-                <button type="button" onClick={imageGeneration} style={buttonStyle}>
-                    Generate
+                <button disabled={inputValue.length === 0} type="button" onClick={imageGeneration} style={buttonStyle}>
+                    Generate 
                 </button>
             </div>
         </div>
